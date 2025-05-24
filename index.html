@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redox Reaction Racing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .assignment-info {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .timer {
+            color: #ff6b6b;
+        }
+
+        .score {
+            color: #4ecdc4;
+        }
+
+        .reaction-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .reaction {
+            font-size: 24px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .coefficient-input {
+            display: inline-block;
+            width: 50px;
+            height: 40px;
+            font-size: 18px;
+            text-align: center;
+            border: 2px solid #4ecdc4;
+            border-radius: 5px;
+            margin: 0 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .coefficient-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .check-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .check-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 20px;
+            padding: 15px 30px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 25px;
+        }
+
+        .correct {
+            color: #4ecdc4;
+        }
+
+        .incorrect {
+            color: #ff6b6b;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .final-score {
+            font-size: 36px;
+            color: #4ecdc4;
+            margin: 20px 0;
+        }
+
+        .leaderboard {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .leaderboard h3 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #4ecdc4;
+        }
+
+        .leaderboard-entry {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="assignment-info">
+            Final Assignment of Course<br>
+            Ifa Nurhayati<br>
+            Offering B<br>
+            230331603627
+        </div>
+        <h1>Redox Reaction Racing</h1>
+    </div>
+
+    <div class="game-container">
+        <div id="menu" class="text-center">
+            <h2>Welcome to Redox Racing!</h2>
+            <p style="margin: 20px 0; font-size: 18px;">Balance redox equations as fast as you can!<br>Enter coefficients to balance each equation.</p>
+            <button class="start-btn" onclick="startGame()">Start Racing!</button>
+        </div>
+
+        <div id="game" style="display: none;">
+            <div class="game-stats">
+                <div class="timer">Time: <span id="timeLeft">60</span>s</div>
+                <div class="score">Score: <span id="score">0</span></div>
+                <div>Question: <span id="questionNum">1</span>/10</div>
+            </div>
+
+            <div class="reaction-container">
+                <div class="reaction" id="reaction"></div>
+                <div class="buttons">
+                    <button class="check-btn" onclick="checkAnswer()">Check Answer</button>
+                    <button class="next-btn" onclick="nextQuestion()" style="display: none;" id="nextBtn">Next Question</button>
+                </div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+        </div>
+
+        <div id="gameOver" style="display: none;">
+            <div class="game-over">
+                <h2>Race Finished!</h2>
+                <div class="final-score" id="finalScore"></div>
+                <p id="gameOverMessage"></p>
+                <button class="start-btn" onclick="restartGame()">Race Again!</button>
+            </div>
+            <div class="leaderboard" id="leaderboard"></div>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        let currentQuestion = 0;
+        let score = 0;
+        let timeLeft = 60;
+        let gameTimer;
+        let gameActive = false;
+        let scores = [];
+
+        // Simplified chemical reactions
+        const reactions = [
+            {
+                equation: "Fe + O2 → Fe2O3",
+                inputs: ["Fe", "O2", "Fe2O3"],
+                answer: [4, 3, 2]
+            },
+            {
+                equation: "H2 + Cl2 → HCl",
+                inputs: ["H2", "Cl2", "HCl"],
+                answer: [1, 1, 2]
+            },
+            {
+                equation: "Al + CuSO4 → Al2(SO4)3 + Cu",
+                inputs: ["Al", "CuSO4", "Al2(SO4)3", "Cu"],
+                answer: [2, 3, 1, 3]
+            },
+            {
+                equation: "Zn + HCl → ZnCl2 + H2",
+                inputs: ["Zn", "HCl", "ZnCl2", "H2"],
+                answer: [1, 2, 1, 1]
+            },
+            {
+                equation: "C + O2 → CO2",
+                inputs: ["C", "O2", "CO2"],
+                answer: [1, 1, 1]
+            },
+            {
+                equation: "Na + H2O → NaOH + H2",
+                inputs: ["Na", "H2O", "NaOH", "H2"],
+                answer: [2, 2, 2, 1]
+            },
+            {
+                equation: "Mg + HCl → MgCl2 + H2",
+                inputs: ["Mg", "HCl", "MgCl2", "H2"],
+                answer: [1, 2, 1, 1]
+            },
+            {
+                equation: "Cu + AgNO3 → Cu(NO3)2 + Ag",
+                inputs: ["Cu", "AgNO3", "Cu(NO3)2", "Ag"],
+                answer: [1, 2, 1, 2]
+            },
+            {
+                equation: "Ca + H2O → Ca(OH)2 + H2",
+                inputs: ["Ca", "H2O", "Ca(OH)2", "H2"],
+                answer: [1, 2, 1, 1]
+            },
+            {
+                equation: "NH3 + O2 → NO + H2O",
+                inputs: ["NH3", "O2", "NO", "H2O"],
+                answer: [4, 5, 4, 6]
+            }
+        ];
+
+        function startGame() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('game').style.display = 'block';
+            document.getElementById('gameOver').style.display = 'none';
+            
+            currentQuestion = 0;
+            score = 0;
+            timeLeft = 60;
+            gameActive = true;
+            
+            updateDisplay();
+            loadQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            gameTimer = setInterval(function() {
+                timeLeft--;
+                document.getElementById('timeLeft').textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= reactions.length || currentQuestion >= 10) {
+                endGame();
+                return;
+            }
+
+            const reaction = reactions[currentQuestion];
+            let html = '';
+            
+            // Build equation with input fields
+            for (let i = 0; i < reaction.inputs.length; i++) {
+                if (i > 0) {
+                    // Add arrow or plus sign
+                    if (reaction.equation.includes('→') && 
+                        reaction.equation.indexOf(reaction.inputs[i]) > reaction.equation.indexOf('→')) {
+                        html += ' → ';
+                    } else {
+                        html += ' + ';
+                    }
+                }
+                html += '<input type="number" class="coefficient-input" id="coeff' + i + '" min="1" max="20"> ' + reaction.inputs[i];
+            }
+            
+            document.getElementById('reaction').innerHTML = html;
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            // Focus on first input
+            setTimeout(function() {
+                document.getElementById('coeff0').focus();
+            }, 100);
+        }
+
+        function checkAnswer() {
+            if (!gameActive) return;
+            
+            const reaction = reactions[currentQuestion];
+            let userAnswer = [];
+            let allFilled = true;
+            
+            // Check all inputs
+            for (let i = 0; i < reaction.answer.length; i++) {
+                const input = document.getElementById('coeff' + i);
+                const value = parseInt(input.value);
+                
+                if (!value || value < 1) {
+                    allFilled = false;
+                    input.style.borderColor = '#ff6b6b';
+                } else {
+                    input.style.borderColor = '#4ecdc4';
+                    userAnswer.push(value);
+                }
+            }
+            
+            if (!allFilled) {
+                document.getElementById('feedback').innerHTML = '<span class="incorrect">Please fill all coefficient fields!</span>';
+                return;
+            }
+            
+            // Simple answer checking
+            let isCorrect = true;
+            for (let i = 0; i < userAnswer.length; i++) {
+                if (userAnswer[i] !== reaction.answer[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            if (isCorrect) {
+                score += 10 + Math.max(0, Math.floor(timeLeft / 2));
+                document.getElementById('feedback').innerHTML = '<span class="correct">Correct! Great job!</span>';
+                document.getElementById('nextBtn').style.display = 'inline-block';
+                
+                // Visual feedback
+                document.querySelector('.reaction-container').classList.add('pulse');
+                setTimeout(function() {
+                    document.querySelector('.reaction-container').classList.remove('pulse');
+                }, 500);
+            } else {
+                document.getElementById('feedback').innerHTML = '<span class="incorrect">Incorrect. Try again!</span>';
+            }
+            
+            updateDisplay();
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            loadQuestion();
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('questionNum').textContent = currentQuestion + 1;
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'block';
+            
+            const finalScore = score;
+            scores.push(finalScore);
+            scores.sort(function(a, b) { return b - a; });
+            scores = scores.slice(0, 5);
+            
+            document.getElementById('finalScore').textContent = finalScore;
+            
+            let message = '';
+            if (finalScore >= 500) {
+                message = 'Outstanding! You are a Redox Racing Champion!';
+            } else if (finalScore >= 300) {
+                message = 'Great job! You are getting the hang of redox reactions!';
+            } else if (finalScore >= 150) {
+                message = 'Good effort! Keep practicing to improve your speed!';
+            } else {
+                message = 'Nice try! Practice makes perfect in redox racing!';
+            }
+            
+            document.getElementById('gameOverMessage').textContent = message;
+            
+            // Update leaderboard
+            let leaderboardHtml = '<h3>Top Scores</h3>';
+            for (let i = 0; i < scores.length; i++) {
+                const medal = i === 0 ? '#1' : i === 1 ? '#2' : i === 2 ? '#3' : '#' + (i + 1);
+                leaderboardHtml += '<div class="leaderboard-entry">';
+                leaderboardHtml += '<span>' + medal + '</span>';
+                leaderboardHtml += '<span>' + scores[i] + ' points</span>';
+                leaderboardHtml += '</div>';
+            }
+            
+            document.getElementById('leaderboard').innerHTML = leaderboardHtml;
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        // Keyboard support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && gameActive) {
+                if (document.getElementById('nextBtn').style.display === 'none') {
+                    checkAnswer();
+                } else {
+                    nextQuestion();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
